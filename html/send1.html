@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script>
+		document.addEventListener('DOMContentLoaded',function(){
+			console.log(666);
+			var username = document.getElementById('username');
+			var send = document.getElementById('send');
+			var show = document.getElementById('show');
+			send.onclick = function(){
+				let _user = username.value;
+				let xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function(){
+					if (xhr.readyState === 4) {
+						let data = JSON.parse(xhr.responseText);
+						show.innerHTML = data.text; 
+						// let data = xhr.responseText;
+						// console.log(data);
+					}
+				}
+				xhr.open("get","http://www.tuling123.com/openapi/api?key=c75ba576f50ddaa5fd2a87615d144ecf&info=%E6%A2%81%E9%9D%99%E8%8C%B9"+_user,true);
+				xhr.send();
+			}
+		})
+	</script>
+</head>
+<body>
+	<h1>123</h1>
+	<input type="text" id="username">
+	<button id="send">发送</button>
+	<div id="show"></div>
+</body>
+</html>

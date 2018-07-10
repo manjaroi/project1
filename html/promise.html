@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>promise</title>
+	<script>
+		var promise = new Promise(function(resolve,reject){
+			setInterval(function(){
+				console.log('吃饭');
+				resolve();
+			},1000)
+		})
+		promise.then(function(resolve,reject){
+			setInterval(function(){
+				console.log('睡觉');
+			},1000)
+		})
+
+		// let promise = new Promise(function(resolve,reject){
+		// 	    console.log('Promise');
+		// 	    resolve();
+		// 	});
+		// 	promise.then(function(){
+		// 	    console.log('resolved');
+		// 	});
+		// 	console.log('Hi!');
+	</script>
+</head>
+<body>
+	
+</body>
+</html>

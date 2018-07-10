@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="../assets/jquery-3.2.1.js"></script>
+</head>
+<body>
+	<input type="text" id="username">
+	<input type="password" id="password">
+	<button id="btn_login">login</button>
+	<script>
+		$('#btn_login').on('click',function(){
+			$.ajax({
+				url : 'http://192.168.111.1:666/src/jquery/login.php',
+				data:{
+					username : $('#username').val().trim(),
+					password : $('#password').val().trim() 
+				},
+				type : 'post',
+				beforeSend : function(){
+					// 发起请求前
+				},
+				success : function(res){
+					console.log(res);
+					var r = window.eval(' ('+  res +') ');
+					if (r.status) {
+						window.location.href = 'index.php';
+					}
+				},
+				error : function(){
+					// status == 500 || 404;
+				},
+				complete : function(){
+					// readyState == 4
+				}
+			})
+		})
+	</script>
+</body>
+</html>

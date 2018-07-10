@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="../font-awesome-4.7.0/css/font-awesome.min.css">
+
+    <script src="../assets/jquery-3.2.1.js"></script>
+    <script src="./libs/httpclient.js"></script>
+</head>
+<body>
+	<input type="text" id="username">
+	<input type="password" id="passowrd">
+	<button id="btn_login">login</button>
+	<script>
+		$(function(){
+			$('#btn_login').click(function(){
+				http.post('http://api-lybz.jcebing.com:8089/api/User/Login',{username:$('#username').val().trim(),passowrd:$('#passowrd').val().trim()},function(_res){
+						console.log(_res);
+						if (_res.code == 0) {
+						let token = _res.data.result.access_token;
+						console.log(token);
+						window.localStorage.setItem('acces_token',token);
+						window.location.href = 'index.html';
+					}
+				})	
+				
+
+
+			})
+		})
+		// http.post('http://api-lybz.jcebing.com:8089/api/User/Login',{username:$('#username').val().trim(),passowrd:$('#passowrd').val().trim()}).then(function(res){
+		// 	if (res.code == 0) {
+		// 		console.log(666);
+		// 		let token = _res.data.result.access_token;
+		// 		window.localStorage.setItem('access_token',token);
+		// 		window.localtion.href = 'index.html';
+		// 	}
+		// }).catch(function(err){
+
+		// })
+	</script>
+</body> 
+</html>

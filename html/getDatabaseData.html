@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script>
+			var xhr = new XMLHttpRequest();
+			console.log(xhr)
+			xhr.onreadystatechange = function() {
+				if(xhr.readyState === 4) {
+					let data = JSON.parse(xhr.responseText);
+					console.log(data);
+				}
+			}
+			xhr.open("get", "http://localhost:666/api/search.php", true);
+			xhr.send(null);
+		</script>
+	</body>
+</html>

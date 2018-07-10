@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<input type="text" id="username">
+	<input type="text" id="password"><br>
+	<button id="send">提交</button>
+	<p id="result"></p>
+	<script>
+		document.addEventListener("DOMContentLoaded",function(){
+			console.log(666);
+			var username = document.querySelector('#username');
+			var password = document.querySelector('#password');
+			var send = document.querySelector('#send');
+			var result = document.querySelector('#result');
+			send.onclick = function(){
+				var _user = username.value;
+				var _pass = password.value;
+				// 实例化xhr
+				var xhr = new XMLHttpRequest();
+				console.log(xhr);
+				xhr.onreadystatechange = function(){
+					if (xhr.readyState == 4) {
+						let data = xhr.responseText;
+						console.log(data);
+						result.innerHTML = xhr.responseText;
+					}
+				}
+				// xhr.open("get","http://localhost:666/api/login.php",true);
+				xhr.open("post","http://localhost:666/api/login.php",true);
+				xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+				xhr.send(`_user=${_user}&_pass=${_pass}`);
+			}
+		})
+	</script>
+</body>
+</html>

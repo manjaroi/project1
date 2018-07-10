@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="../js/ajax.js"></script>
+</head>
+<body>
+	<input type="text" id="username">
+	<input type="text" id="password">
+	<button id="btn">login</button>
+	<script>
+		let btn = document.getElementById('btn');
+		btn.onclick = function(){
+			let username = document.getElementById('username').value;
+			let password = document.getElementById('password').value;
+			let params = {username:username,password:password};
+			$.ajax({
+				api : 'login9.php',
+				params,
+				method : 'post',
+				success : function(res){
+					console.log(res);
+				}
+			})
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<div id="datagrid">
+	
+
+</div>
+
+
+<script>	
+	
+	$('#datagrid').datagrid({
+        url: 'http://api-lybz.jcebing.com:8089/api/Vendor/GetPageList',
+        method: 'post',
+        data: {pageSize: 10, page: 1},
+    })
+	
+</script>

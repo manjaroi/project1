@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>作业讲解</title>
+	<style>
+		ul{list-style: none;padding:0;margin:0;}
+		a{text-decoration:none;}
+		.city-wrap { overflow-y: auto; }
+		.city-wrap h2 { margin: 0; padding: .5em; background: #ccc; color: #fff; }
+		.city-wrap ul { padding: 0; margin: 0; }
+		.city-wrap ul li { padding: 5px 0; border-top: 1px dotted #ddd; }
+		.city-wrap ul li:hover { background: #efefef; }
+		.city-wrap ul li > span {padding: .5em; color: #26c8ac; }
+		.city-wrap a { display: inline-block; padding: .5em; color: #444; }
+		.city-wrap ul a:hover { color: #26c8ac; text-decoration: none; }
+		.city-wrap .hotCity a { width: 3.5em; text-align: center; }
+
+		.index-bar{background-color:#efefef;}
+		.index-bar a{width: 5.5em;}
+
+		#weather{border:1px solid #ddd;padding:10px;font-size:12px;}
+		#weather ul{padding:5px;overflow:hidden;}
+		#weather li{float:left;padding:5px;width:20%;height:200px;border-right:1px dotted #ddd;box-sizing:border-box;}
+		#weather li.last{border-right:none;float:right;}
+		#weather .date{padding-bottom:10px;margin-bottom:10px;text-align:center;font-weight:bold;border-bottom:1px dotted #ddd;}
+		
+		.type{height:70px;}
+		.qt{background:url(tianqi/1.png) no-repeat center;display: block;}
+		.zheny{background:url(tianqi/10.png) no-repeat center;}
+		.dy{background:url(tianqi/3.png) no-repeat center;}
+		.by{background:url(tianqi/12.png) no-repeat center;}
+		.zy{background:url(tianqi/10.png) no-repeat center;}
+		.xy{background:url(tianqi/9.png) no-repeat center;}
+		.yin{background:url(tianqi/4.png) no-repeat center;}
+	</style>
+	<script>
+		document.addEventListener('DOMContentLoaded',function(){
+			let xhr = new XMLHttpRequest();
+
+			xhr.onreadystatechange = function(){
+				if (xhr.readyState === 4) {
+					let data = JSON.parse(xhr.responseText);
+					console.log(data);
+
+					let weather = document.querySelector('#weather');
+					console.log(weather);
+					let hotCity = document.querySelector('.hotCity');
+					let indexCity = document.querySelector('.indexCity');
+					let h2 = document.createElement('h2');
+					let idx_h2 = document.createElement('h2');
+					let div = document.createElement('div');
+					let idx_ul = document.createElement('ul');
+					let li1 = document.createElement('li');
+					let span1 = document.createElement('span');
+					let h3 = document.createElement('h2');
+					let h4 = document.createElement('h4');
+					let ul_weather = document.createElement('ul');
+					li1.appendChild(span1);
+					// idx_ul.appendChild(li1);
+					let li2 = document.createElement('li');
+					let span2 = document.createElement('span');
+					li2.appendChild(span2);
+					// idx_ul.appendChild(li2);
+					hotCity.appendChild(h2);
+					h2.innerText = '热门城市';
+					let ul = document.createElement('ul');
+					hotCity.appendChild(ul);
+					for(let key in data){
+						let arr = data['regions'];
+						for(let key in arr){
+							res = arr[key].regions;
+
+						}
+						for(let key in res){
+							console.log(666);
+							console.log(res[key].pinyin);
+						}
+						ul.innerHTML = arr.map(function(item){
+							let res = item.regions;
+							// if (item.pinyin[0] === 'A' && item.special === true) {
+							// 	li1.innerHTML += `<a>${item.name}</a>`;
+							// }
+							if (item.pinyin[0] === 'B' && item.special === true) {
+								li2.innerHTML += `<a>${item.name}</a>`;
+							}
+							for(let key in res){
+								let str = `${res[key].pinyin}`;
+								if (res[key].hot === true) {
+									return `<a href='#' class="hotCity weather_city">${res[key].name}</a>`
+								}
+							}
+							if (item.municipality === true || item.hot === true) {
+								return `<a href='#' class="hotCity">${item.name}</a>`
+							}
+						}).join(' ');
+					}
+
+					idx_h2.innerText = '按拼音字母查询';
+					indexCity.appendChild(idx_h2);
+					let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+					str = str.split('');
+					div.innerHTML += str.map(function(item, index) {
+							return '<a href="#li' + index + '">' + item + '</a>';
+						}).join("");
+					div.classList.add('index-bar');
+					indexCity.appendChild(div);
+					indexCity.appendChild(idx_ul);
+
+					let a = div.getElementsByTagName('a');
+					for(var i = 0;i < str.length;i ++){
+						var li = document.createElement("li");
+						li.innerHTML = '<span id="li' + i + '">' + str[i] + '</span><span></span>';
+						idx_ul.appendChild(li);
+						for(let key in data){
+							let arr = data['regions'];
+							idx_ul.children[i].children[1].innerHTML = arr.map(function(item) {
+								var res = item.pinyin.slice(0, 1);
+								var area = item.regions;
+								if(item.municipality && res == idx_ul.children[i].children[0].innerText) {
+									return `<a href="###" class="weather_city">${item.name}</a>`;
+								} else if(area) {
+									return area.map(function(item) {
+										if(item.pinyin) {
+											var begin2 = item.pinyin.slice(0, 1);
+											if(begin2 == idx_ul.children[i].children[0].innerText) {
+												return `<a href="###" class="weather_city">${item.name}</a>`;
+											}
+										}
+									}).join("");
+								}
+							}).join("");
+						}
+					}
+
+					let city = document.querySelector('.city-wrap');
+					city.onclick = function(e){
+					e = e || window.event;
+					let target = e.target || e.srcElement;
+					if (target.className === 'weather_city' || 'hotCity') {
+						let xhr = new XMLHttpRequest();
+						console.log(target.innerText);
+						xhr.onreadystatechange = function(){
+							if (xhr.readyState === 4) {
+								let data = JSON.parse(xhr.responseText);
+								console.log(data);
+								h3.innerText = `${target.innerText}未来5天天气预报`;
+								weather.appendChild(h3);
+								weather.appendChild(ul_weather);
+								for(var key in data){
+									console.log(data[key].forecast);
+									if (data[key].forecast) {										
+										data[key].forecast.map(function(item){
+											let li_weather = document.createElement('li');
+											li_weather.innerText = item.date;
+											ul_weather.appendChild(li_weather);
+											if (item.type === '晴') {
+												let img = document.createElement('img');
+												img.src = '../tianqi/1.png';
+												li_weather.appendChild(img);
+												img.classList.add('qt');
+											}else if (item.type === '多云') {
+												let img = document.createElement('img');
+												img.src = '../tianqi/5.png';
+												li_weather.appendChild(img);
+												img.classList.add('qt');
+											}else if (item.type === '阴') {
+												let img = document.createElement('img');
+												img.src = '../tianqi/3.png';
+												li_weather.appendChild(img);
+												img.classList.add('qt');
+											}else if (item.type === '小雨') {
+												let img = document.createElement('img');
+												img.src = '../tianqi/8.png';
+												li_weather.appendChild(img);
+												img.classList.add('qt');
+											}else if (item.type === '中雨') {
+												let img = document.createElement('img');
+												img.src = '../tianqi/9.png';
+												li_weather.appendChild(img);
+												img.classList.add('qt');
+											}else if (item.type === '大雨') {
+												let img = document.createElement('img');
+												img.src = '../tianqi/10.png';
+												li_weather.appendChild(img);
+												img.classList.add('qt');
+											}else if (item.type === '阵雨') {
+												let img = document.createElement('img');
+												img.src = '../tianqi/11.png';
+												li_weather.appendChild(img);
+												img.classList.add('qt');
+											}else if (item.type === '雷阵雨') {
+												let img = document.createElement('img');
+												img.src = '../tianqi/16.png';
+												li_weather.appendChild(img);
+												img.classList.add('qt');
+											}else if (item.type === '大到暴雨') {
+												let img = document.createElement('img');
+												img.src = '../tianqi/13.png';
+												li_weather.appendChild(img);
+												img.classList.add('qt');
+											}
+											let p = document.createElement('p');
+											p.innerText = `${item.low.slice(2,7)}~${item.high.slice(2,7)}`
+											li_weather.appendChild(p);
+											let p1 = document.createElement('p');
+											p1.innerText = item.fengxiang;
+											li_weather.appendChild(p1);
+										})
+									}
+								}
+							}
+						}
+						xhr.open('GET',`http://wthrcdn.etouch.cn/weather_mini?city=${target.innerText}`,true);
+						xhr.send();
+						ul_weather.innerHTML = '';
+					}
+			}
+
+				}
+			}
+
+			xhr.open('GET','./data/region.json',true);
+				
+			xhr.send();
+
+
+			
+		})
+	</script>	
+
+
+</head>
+<body>
+	<div id="weather"></div>
+	<div class="city-wrap">
+		<div class="hotCity">
+			
+		</div>
+		<div class="indexCity">
+			
+		</div>
+	</div>
+</body>
+</html>

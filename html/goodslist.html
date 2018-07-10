@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		ul{list-style: none;padding:0;margin:0;}
+		.container{width:984px;margin:0 auto;}
+		.goodslist img{width:200px;}
+		.goodslist ul{overflow: hidden;}
+		.goodslist li{float:left;padding-right:15px;margin:15px 15px;border-right:1px dotted #ccc;}
+		.price span{color:#f00;}
+		.price span::before{
+			content:'￥';
+		}
+
+		.page{padding:10px 0;}
+		.page ul{overflow: hidden;text-align:right;}
+		.page li{display:inline-block;margin:5px;width:30px;height:30px;line-height:30px;text-align:center;background-color: #cfcfcf;font-size:12px;}
+		.page li.active{background-color: #f90;color:#fff;}
+	</style>
+	<script>
+		document.addEventListener('DOMContentLoaded',function(){
+			var goodslist = document.querySelector('.goodslist');
+			var page = document.querySelector('.page');
+
+			let qty = 16;
+			// ajax请求四部
+			// 1.返回一个异步请求对象
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function(){
+				if (xhr.readyState == 4) {
+					console.log(xhr);
+					// 数据完全接收 responseText
+					let data = JSON.parse(xhr.responseText);
+					console.log(data);
+					// 创建ul
+					let ul = document.createElement('ul');
+					console.log(ul);
+					ul.innerHTML = data.data.map(function(item){
+						// 根据数据生成列表
+						return `
+							<li data-guid="${item.id}">
+								<img src="${item.imgurl}">
+								<h4>${item.name}</h4>
+								<p>价格:<span>${item.price}</span></p>
+								<p>颜色:<span>${item.color}</span></p>
+							</li>` 
+					}).join('\n');
+					goodslist.innerText = '';
+					goodslist.appendChild(ul);
+
+					// 创建分页
+					let page_item = document.createElement('ul');
+					let page_num = Math.ceil(data.total/data.qty);
+					// console.log(page_num);
+
+					// 循环生成标页码
+					let content = '';
+					for(let i = 1;i <= page_num;i ++){
+						if (i === data.page) {
+							content += `<li class="active">${i}</li>`;
+						}else{
+							content += `<li>${i}</li>`					
+						}
+					}
+					page_item.innerHTML = content;
+					page.innerText = '';
+					page.appendChild(page_item);
+				}
+			}
+			xhr.open("get", "../api/goodslist.php?qty="+qty, true);
+			xhr.send();
+
+			// 点击切换分页
+			page.onclick = function(e){
+				if (e.target.tagName.toLowerCase() === 'li') {
+					xhr.open("get", "../api/goodslist.php?page="+e.target.innerText +'&qty='+qty, true);
+					xhr.send();	
+				}
+			}
+
+		})
+	</script>
+</head>
+<body>
+	<div class="container">
+		<h1>商品列表</h1>
+		<div class="goodslist"></div>
+		<div class="page"></div>
+	</div>
+</body>
+</html>

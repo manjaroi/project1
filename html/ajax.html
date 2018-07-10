@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<input type="text" id="username">
+	<button id="send">发送</button>
+	<div id="show"></div>
+	<script>
+		var username = document.getElementById('username');
+		var send = document.getElementById('send');
+		var show = document.getElementById('show');
+		// 处理数据
+		send.onclick = function(){
+			console.log(555);	
+			let _user = username.value;
+			// 实例化 返回一个异步请求	
+			let xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function(){
+				if (xhr.readyState === 4) {
+					let data = JSON.parse(xhr.responseText);
+					show.innerHTML = data.text; 
+					// let data = xhr.responseText;
+					// console.log(data);
+				}
+			}
+			// 设置请求参数	
+			xhr.open("get","http://www.tuling123.com/openapi/api?key=c75ba576f50ddaa5fd2a87615d144ecf&info=%E6%A2%81%E9%9D%99%E8%8C%B9"+_user,true);
+			// 向服务器发起请求
+			xhr.send();
+		}
+	</script>
+</body>
+</html>

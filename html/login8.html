@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="../js/ajax.js"></script>
+</head>
+<body>
+	<input type="text" id="username">
+	<input type="text" id="password">
+	<button id="btn">提交</button>
+	<script>
+		let btn = document.getElementById('btn');
+
+		btn.onclick = function(){
+			console.log(666);
+			let username = document.getElementById('username').value;
+			let pwd = document.getElementById('password').value;
+
+			let params = {username:username,password:pwd};
+			console.log(params);
+			$.ajax({
+				api : 'login8.php',
+				params,
+				method : 'post',
+				success : function(res){
+					console.log(res);
+				}
+			})
+
+		}
+	</script>
+</body>
+</html>

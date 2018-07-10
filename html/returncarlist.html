@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		#carList li{position:relative;padding-bottom:15px;margin-bottom:15px;border-bottom:1px solid #ddd;}
+		#carList img{display:block;width:100px;}
+		#carList li .btn-close{position:absolute;top:0;right:0;padding:0 5px;cursor:default;}
+		#carList li .btn-close:hover{background-color:#f00;color:#fff;}
+		.subPrice{padding:5px 20px;color:#f00;font-weight:bold;text-align:right;}
+		#carList .price span{color:#f00;font-size:14px;}
+		.price span::before,.subPrice::before{
+			content:'￥';
+			font-size:12px;
+		}
+		#carList .price span{font-size:11px;}
+	</style>
+	<script src="../js/common2.js"></script>
+	<script>
+		window.onload = function(){
+			var carList = document.getElementById('carList');
+			var b = document.getElementsByClassName('subPrice')[0];
+			var c = document.getElementById('btnClear');
+
+			// 获取cookie
+			var goodslist = JSON.parse(Cookie.get('goodslist'));
+
+
+			 // 遍历cookie写入数组
+			function render(){
+				// var ul = document.createElement('ul');
+				var ul = document.createElement('ul');
+				var total = 0;
+				var total = 0;
+				ul.innerHTML = goodslist.map(function(goods){
+					total += goods.price * goods.qty;
+					return '<li data-guid ="'+ goods.guid +'">'+ 
+					'<img src="'+ goods.imgurl+'" alt="" />'+ 
+					'<h4>'+goods.name +'</h4>'+ 
+					'<p class="price"> 价格:<span>' + goods.price +'&times;'+goods.qty +'</span> </p>' +
+					'<span class="btn-close">&times;</span>'+
+					'</li>'
+				}).join('\n');
+					carList.innerText = '';
+					carList.appendChild(ul);
+					b.innerText = total;
+				}
+			render();
+				
+
+			c.onclick = function(){
+				Cookie.remove('goodslist');
+
+				carList.innerHTML = '';
+				b.innerText = '0';
+			}
+
+			// 事件委托 实现删除当前商品的效果
+			carList.onclick = function(e){
+			e = e || window.event;
+			var target = e.target || e.srcElement;
+
+			if(target.className === 'btn-close'){
+				// 获取当前li
+				var currentLi = target.parentNode;
+				var guid = currentLi.getAttribute('data-guid');
+
+				for(var i=0;i<goodslist.length;i++){
+					if(goodslist[i].guid === guid){
+						// 删除数组对应商品
+						goodslist.splice(i,1);
+
+						// 修改对应cookie
+						Cookie.set('goodslist',JSON.stringify(goodslist));
+
+
+						// 重新生成html结构
+						render();
+
+						// 删除html结构
+						// currentLi.parentNode.removeChild(currentLi);
+						break;
+					}
+				}
+			}
+		}
+		}
+	</script>
+</head>
+<body>
+	<body>
+	<h1>购物车</h1>
+	<div id="carList">
+		
+	</div>
+	<div class="subPrice"></div>
+	<a href="#" id="btnClear">清空购物车</a>
+</body>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<input type="text" id="username">
+	<input type="text" id="password">
+	<button id="btn">yes</button>
+	<script>
+		let btn = document.getElementById('btn');
+		btn.onclick = function(){
+			let username = document.getElementById('username').value;
+			let password = document.getElementById('password').value;
+			let xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function(){
+				if (xhr.readyState === 4) {
+					let data = xhr.responseText;
+					console.log(data);
+				}
+			}
+			xhr.open('POST','http://localhost:666/src/api/login4.php',true);
+			xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+			xhr.send(`username=${username}&password=${password}`);
+		}
+	</script>
+</body>
+</html>

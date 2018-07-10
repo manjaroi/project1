@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="../js/ajax.js"></script>
+	<script src="../js/datagrid.js"></script>
+</head>
+<body>
+	<script>
+		$.ajax({
+			api : 'students.php',
+			success : function(res){
+				var obj = window.eval('('+ res +')');
+				var _datagrid = new Datagrid();
+				_datagrid.url = 'students.php';
+				_datagrid.refresh();
+				_datagrid.cols = "name,age,phone"
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+	input{
+		margin-bottom: 10px;
+	}
+</style>
+</head>
+<body>
+	<input type="text" id="username"><br>
+	<input type="text" id="password"><br>
+	<button id="send">注册</button>
+<script>
+	
+	document.querySelector('#send').onclick = ()=>{
+		var username =  document.querySelector('#username').value;
+		var password = document.querySelector('#password').value;
+		let xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function(){
+			if (xhr.readyState === 4) {
+				let data = xhr.responseText;
+				console.log(data);
+			}
+		}
+		xhr.open("post","http://localhost:666/api/register.php",true);
+		xhr.setRequestHeader('content-type','application/x-www-form-urlencoded');
+		xhr.send(`username=${username}&password=${password}`);
+	}
+</script>
+
+
+</body>
+</html>
+
+
